@@ -9,10 +9,10 @@ class GradCAM:
         self.gradients = None
         self.activations = None
 
-        # Save activations
+        # forward hook → save activations
         target_layer.register_forward_hook(self.save_activations)
 
-        # Save gradients
+        # backward hook → save gradients
         target_layer.register_backward_hook(self.save_gradients)
 
     def save_activations(self, module, input, output):
@@ -26,15 +26,22 @@ class GradCAM:
         output = self.model(input_tensor)
 
         class_idx = output.argmax(dim=1).item()
+
+        # backward on predicted class
         output[0, class_idx].backward()
 
-        grads = self.gradients
-        acts = self.activations
+        grads = self.gradients        # (B, C, H, W)
+        acts = self.activations       # (B, C, H, W)
 
-        # GAP
+        # global average pooling over H, W
         weights = grads.mean(dim=(2, 3), keepdim=True)
 
-        cam = (weights * acts).sum(dim=1).squeeze().cpu().numpy()
+        cam = (weights * acts).sum(dim=1)  # (B, H, W)
+
+        # detach before converting to numpy
+        cam = cam.squeeze().detach().cpu().numpy()
+
+        # normalize
         cam = (cam - cam.min()) / (cam.max() - cam.min() + 1e-8)
 
         return cam, class_idx
