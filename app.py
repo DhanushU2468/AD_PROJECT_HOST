@@ -7,6 +7,9 @@ from skimage.transform import resize
 from models.hybrid_model import HybridModel
 from explainability.gradcam import GradCAM
 import torch.nn.functional as F
+import gdown
+
+
 
 st.set_page_config(page_title="🧠 Alzheimer MRI Classifier", layout="centered")
 st.title("🧠 Alzheimer’s Disease Classification (MRI + Grad-CAM)")
