@@ -20,7 +20,7 @@ labels = ["Non Demented", "Very mild Dementia", "Mild Dementia", "Moderate Demen
 def load_model():
     device = "cpu"
     model = HybridModel(num_classes=4).to(device)
-    model.load_state_dict(torch.load("models/model_epoch_2.pth", map_location=device))
+    model.load_state_dict(torch.load("models/model_epoch_1.pth", map_location=device))
     model.eval()
     return model, device
 
