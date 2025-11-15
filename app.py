@@ -22,7 +22,7 @@ def load_model():
     model = HybridModel(num_classes=4, pretrained=False).to(device)
 
     # Load model from GitHub folder: models/
-    model.load_state_dict(torch.load("models/model_epoch_2.pth", map_location=device))
+    model.load_state_dict(torch.load("models/model_epoch_1.pth", map_location=device))
 
     model.eval()
     return model, device
